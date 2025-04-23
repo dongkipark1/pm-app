@@ -5,9 +5,7 @@ import com.example.pmapp.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,6 +33,23 @@ public class ProductController {
     // 상품 등록 처리
     @GetMapping("/{id}/edit")
     public String create(@ModelAttribute Product product){
+        productRepository.save(product);
+        return "redirect:/products";
+    }
+
+    // 상품 수정
+    @GetMapping("/{id}/update")
+    public String updateForm(@PathVariable Long id, Model model){
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 상품입니다:" + id));
+        model.addAttribute("product", product);
+        return "product/form";
+    }
+
+    // 상품 수정 처리
+    @PostMapping("/{id}/update")
+    public String update(@PathVariable Long id, @ModelAttribute Product product){
+        product.setId(id);
         productRepository.save(product);
         return "redirect:/products";
     }
