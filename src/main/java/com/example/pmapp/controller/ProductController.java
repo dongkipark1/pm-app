@@ -23,4 +23,11 @@ public class ProductController {
         model.addAttribute("product", products);
         return "product/list";
     }
+
+    // 상품 등록
+    @GetMapping("/new")
+    public String createForm(Model model){
+        model.addAttribute("product", new Product());
+        return "product/form";
+    }
 }
