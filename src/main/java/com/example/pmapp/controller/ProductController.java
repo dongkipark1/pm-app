@@ -53,4 +53,11 @@ public class ProductController {
         productRepository.save(product);
         return "redirect:/products";
     }
+
+    // 상품 삭제 처리
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable Long id){
+        productRepository.deleteById(id);
+        return "redirect:/products";
+    }
 }
