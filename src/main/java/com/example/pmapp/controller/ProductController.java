@@ -31,7 +31,7 @@ public class ProductController {
     }
 
     // 상품 등록 처리
-    @GetMapping("/create")
+    @PostMapping("/create")
     public String create(@ModelAttribute Product product){
         productRepository.save(product);
         return "redirect:/products";
