@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>재고 목록</title>
+</head>
+<body>
+<h1>재고 목록</h1>
+<a href="/stocks/create-form">+ 재고 등록</a>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>수량</th>
+        <th>타입</th>
+        <th>등록일</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#stocks}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{quantity}}</td>
+            <td>{{type}}</td>
+            <td>{{transactionDate}}</td>
+        </tr>
+    {{/stocks}}
+    {{^stocks}}
+        <tr>
+            <td colspan="4">재고 이력이 없습니다.</td>
+        </tr>
+    {{/stocks}}
+    </tbody>
+</table>
+<a href="/products">목록으로</a>
+</body>
+</html>

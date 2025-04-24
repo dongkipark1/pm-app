@@ -20,20 +20,20 @@ public class StockController {
     private final StockRepository stockRepository;
 
     @GetMapping
-    public String list(Model model){
+    public String listStocks(Model model){
         List<Stock> stocks = stockRepository.findAll();
         model.addAttribute("stocks", stocks);
         return "stock/list";
     }
 
-    @GetMapping("/new")
-    public String showForm(Model model){
+    @GetMapping("/create-form")
+    public String showCreateForm(Model model){
         model.addAttribute("stock", new Stock());
         return "stock/form";
     }
 
-    @PostMapping
-    public String create(@ModelAttribute Stock stock){
+    @PostMapping("/create")
+    public String createStock(@ModelAttribute Stock stock){
         stock.setTransactionDate(java.time.LocalDateTime.now());
         stockRepository.save(stock);
         return "redirect:/stocks";
