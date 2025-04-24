@@ -24,14 +24,14 @@ public class ProductController {
     }
 
     // 상품 등록
-    @GetMapping("/new")
+    @GetMapping("/create-form")
     public String createForm(Model model){
         model.addAttribute("product", new Product());
         return "product/form";
     }
 
     // 상품 등록 처리
-    @GetMapping("/{id}/edit")
+    @GetMapping("/create")
     public String create(@ModelAttribute Product product){
         productRepository.save(product);
         return "redirect:/products";

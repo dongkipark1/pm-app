@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 등록</title>
+</head>
+<body>
+    <h1>{{#product.id}}상품 수정{{/product.id}}{{^product.id}}상품 등록{{/product.id}}</h1>
+    <form action="{{#product.id}}/products/{{product.id}}/update{{/product.id}}{{^product.id}}/products/create{{/product.id}}" method="post">
+        <label>상품명: <input type="text" name="name" value="{{product.name}}"></label><br>
+        <label>가격: <input type="number" name="price" value="{{product.price}}"></label><br>
+        <label>재고수량: <input type="number" name="stockQuantity" value="{{product.stockQuantity}}"></label><br>
+        <button type="submit">{{#product.id}}수정{{/product.id}}{{^product.id}}등록{{/product.id}}</button>
+    </form>
+
+    <a href="/products">목록으로</a>
+</body>
+</html>

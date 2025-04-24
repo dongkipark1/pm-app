@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 목록</title>
+</head>
+<body>
+    <h1>사용자 목록</h1>
+    <table border="1">
+        <tr>
+            <th>이름</th>
+            <th>이메일</th>
+        </tr>
+        {{#users}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{email}}</td>
+            </tr>
+        {{/users}}
+    </table>
+</body>
+</html>
