@@ -21,7 +21,7 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(){
         return username -> {
-            User user = userRepository.findByUserName(username)
+            User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
             return org.springframework.security.core.userdetails.User.builder()
                     .username(user.getUsername())
@@ -44,17 +44,19 @@ public class SecurityConfig {
                        .requestMatchers(
                                "/",
                                "/users/join",
-                               "/login",
-                               "/css/**").permitAll()
+                               "/users/login",
+                               "/css/**"
+                       ).permitAll()
                        .anyRequest().authenticated()
                )
                .formLogin(login -> login
-                       .loginPage("/login")
+                       .loginPage("/users/login")
+                       .loginProcessingUrl("/login")
                        .defaultSuccessUrl("/products", true)
                        .permitAll()
                )
                .logout(logout -> logout
-                       .logoutSuccessUrl("/login?logout")
+                       .logoutSuccessUrl("/users/login?logout")
                        .permitAll()
                );
        return http.build();

@@ -27,17 +27,22 @@ public class UserController {
         return "user/list";
     }
 
+    @GetMapping("/login")
+    public String loginForm(){
+        return "user/login-form";
+    }
+
     @GetMapping("/join")
     public String joinForm(Model model){
         model.addAttribute("user", new User());
         return "user/join-form";
     }
 
-    @PostMapping("/join")
+    @PostMapping("/users/join")
     public String join(@ModelAttribute User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("USER");
         userRepository.save(user);
-        return "redirect:/users";
+        return "redirect:/users/login";
     }
 }
