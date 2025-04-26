@@ -21,12 +21,14 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(){
         return username -> {
-            User user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
+            User u = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException(
+                            "해당 사용자가 없습니다:" + username
+                    ));
             return org.springframework.security.core.userdetails.User.builder()
-                    .username(user.getUsername())
-                    .password(user.getPassword())
-                    .roles(user.getRole())
+                    .username(u.getUsername())
+                    .password(u.getPassword())
+                    .roles(u.getRole())
                     .build();
         };
     }
@@ -56,6 +58,7 @@ public class SecurityConfig {
                        .permitAll()
                )
                .logout(logout -> logout
+                       .logoutUrl("/logout")
                        .logoutSuccessUrl("/users/login?logout")
                        .permitAll()
                );
