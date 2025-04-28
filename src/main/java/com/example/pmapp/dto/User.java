@@ -13,11 +13,12 @@ public class User {
     private Long id;
 
     @Column(unique = true)
-    private String username;
+    private String email;
 
 
     private String password;
 
+    @Column(length = 20)
+    private String phoneNumber;
 
-    private String role; // "관리자" and "직원"
 }

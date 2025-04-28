@@ -6,8 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,50 +17,46 @@ public class SecurityConfig {
 
     private final UserRepository userRepository;
 
+    // 로그인 시 UserDetailsService
     @Bean
-    public UserDetailsService userDetailsService(){
-        return username -> {
-            User u = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException(
-                            "해당 사용자가 없습니다:" + username
-                    ));
+    public UserDetailsService userDetailsService() {
+        return email -> {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new UsernameNotFoundException("사용자 없음: " + email));
             return org.springframework.security.core.userdetails.User.builder()
-                    .username(u.getUsername())
-                    .password(u.getPassword())
-                    .roles(u.getRole())
+                    .username(user.getEmail())
+                    .password(user.getPassword())
+                    .authorities("USER")  // 모든 직원이 동일 권한
                     .build();
         };
     }
 
+    // 비밀번호 암호화
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // 시큐리티 필터 체인
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-       http
-               .csrf(csrf -> csrf.disable())
-               .authorizeHttpRequests(auth -> auth
-                       .requestMatchers(
-                               "/",
-                               "/users/join",
-                               "/users/login",
-                               "/css/**"
-                       ).permitAll()
-                       .anyRequest().authenticated()
-               )
-               .formLogin(login -> login
-                       .loginPage("/users/login")
-                       .loginProcessingUrl("/users/login")
-                       .defaultSuccessUrl("/products", true)
-                       .permitAll()
-               )
-               .logout(logout -> logout
-                       .logoutUrl("/logout")
-                       .logoutSuccessUrl("/users/login?logout")
-                       .permitAll()
-               );
-       return http.build();
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/users/login", "/users/join", "/css/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/users/login")
+                        .loginProcessingUrl("/users/login")
+                        .defaultSuccessUrl("/products", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/users/login?logout")
+                        .permitAll()
+                );
+        return http.build();
     }
 }

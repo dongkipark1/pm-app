@@ -1,49 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>로그인</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
-<div class="bg-white p-6 rounded-lg shadow w-full max-w-md">
-    <h1 class="text-2xl font-bold mb-6 text-center">로그인</h1>
-    <form action="/users/login" method="post" class="space-y-4">
+<body class="bg-gradient-to-br from-teal-50 to-green-50 min-h-screen flex items-center justify-center p-6">
+<div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden">
+    <div class="bg-gradient-to-r from-green-600 to-teal-600 p-6 flex flex-col items-center">
+        <img src="/static/images/logo.png" alt="Logo" class="h-12 mb-3">
+        <h1 class="text-3xl font-extrabold text-white">로그인</h1>
+        <p class="text-green-200 mt-1">계정 정보로 로그인하세요</p>
+    </div>
+    <form action="/users/login" method="post" class="space-y-5 p-6">
         <div>
-            <label class="block text-sm font-medium text-gray-700">아이디</label>
+            <label for="username" class="text-sm font-semibold text-gray-700">이메일</label>
             <input
+                    id="username"
                     name="username"
-                    type="text"
+                    type="email"
                     required
-                    class="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="your.email@example.com"
+                    class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
             />
         </div>
         <div>
-            <label class="block text-sm font-medium text-gray-700">비밀번호</label>
+            <label for="password" class="text-sm font-semibold text-gray-700">비밀번호</label>
             <input
+                    id="password"
                     name="password"
                     type="password"
                     required
-                    class="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    placeholder="••••••••"
+                    class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
             />
         </div>
-        <button
-                type="submit"
-                class="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition"
-        >
+        <button type="submit"
+                class="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">
             로그인
         </button>
     </form>
-    <p class="mt-4 text-center text-gray-600">
-        계정이 없으시면
-        <a href="/users/join" class="text-blue-600 hover:underline">회원가입</a>
-    </p>
-    {{#error}}
-        <p class="mt-2 text-red-500 text-center">로그인 정보가 올바르지 않습니다.</p>
-    {{/error}}
-    {{#logout}}
-        <p class="mt-2 text-green-500 text-center">로그아웃 되었습니다.</p>
-    {{/logout}}
+    <div class="border-t border-gray-100 p-4 text-center bg-gray-50">
+        <p class="text-sm text-gray-600">
+            계정이 없으시면
+            <a href="/users/join" class="text-teal-600 font-medium hover:underline">회원가입</a>
+        </p>
+        {{#error}}
+            <p class="mt-2 text-red-500 text-center">로그인 정보가 올바르지 않습니다.</p>
+        {{/error}}
+        {{#logout}}
+            <p class="mt-2 text-green-500 text-center">로그아웃 되었습니다.</p>
+        {{/logout}}
+    </div>
 </div>
 </body>
 </html>

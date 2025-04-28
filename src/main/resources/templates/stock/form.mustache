@@ -8,20 +8,15 @@
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
 <div class="bg-white p-6 rounded-lg shadow w-full max-w-sm">
     <h1 class="text-2xl font-bold mb-6 text-center">재고 등록</h1>
-    <form action="/stocks/create"
-          method="post"
-          class="space-y-4">
+    <form action="/stocks/create" method="post" class="space-y-4">
         <div>
             <label class="block text-sm font-medium text-gray-700">수량</label>
-            <input type="number"
-                   name="quantity"
-                   required
+            <input type="number" name="quantity" required
                    class="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700">입출고 구분</label>
-            <select name="type"
-                    required
+            <select name="type" required
                     class="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="IN">입고</option>
                 <option value="OUT">출고</option>
