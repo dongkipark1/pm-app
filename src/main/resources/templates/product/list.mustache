@@ -3,32 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>상품 목록</title>
+    <script src="http://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>상품 목록</h1>
-    <a href="/products/create-form">+ 상품 등록</a>
-    <table border="1">
+<body class="bg-gray-100 min-h-screen p-8">
+<div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
+    <h1 class="text-2xl font-bold mb-4">상품 목록</h1>
+    <div class="flex justify-end mb-4">
+        <a href="/products/create-form"
+           class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            + 상품 등록
+        </a>
+    </div>
+    <table class="min-w-full border border-gray-200">
+        <thead class="bg-gray-200">
         <tr>
-            <th>ID</th>
-            <th>상품명</th>
-            <th>가격</th>
-            <th>재고 수량</th>
-            <th>관리</th>
+            <th class="px-4 py-2">ID</th>
+            <th class="px-4 py-2">상품명</th>
+            <th class="px-4 py-2">가격</th>
+            <th class="px-4 py-2">재고 수량</th>
+            <th class="px-4 py-2">관리</th>
         </tr>
+        </thead>
+        <tbody>
         {{#product}}
-            <tr>
-                <td>{{id}}</td>
-                <td>{{name}}</td>
-                <td>{{price}}</td>
-                <td>{{stockQuantity}}</td>
-                <td>
-                    <a href="products/{{id}}/update">수정</a>
-                    <form action="products/{{id}}/delete" method="post" style="display:inline">
-                        <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+            <tr class="border-t">
+                <td class="px-4 py-2">{{id}}</td>
+                <td class="px-4 py-2">{{name}}</td>
+                <td class="px-4 py-2">{{price}}</td>
+                <td class="px-4 py-2">{{stockQuantity}}</td>
+                <td class="px-4 py-2 space-x-2">
+                    <a href="/products/{{id}}/update"
+                       class="text-blue-600 hover:underline">수정</a>
+                    <form action="/products/{{id}}/delete"
+                          method="post"
+                          class="inline">
+                        <button type="submit"
+                                class="text-red-600 hover:underline"
+                                onclick="return confirm('정말 삭제하시겠습니까?')">
+                            삭제
+                        </button>
                     </form>
                 </td>
             </tr>
         {{/product}}
+        {{^product}}
+            <tr>
+                <td colspan="5" class="text-center py-4">등록된 상품이 없습니다.</td>
+            </tr>
+        {{/product}}
+        </tbody>
     </table>
+</div>
 </body>
 </html>
