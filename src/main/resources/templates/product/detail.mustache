@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 상세</title>
+    <script src="http://cdn.tailwindcss.com"></script>
+</head>
+<body class="p-8 bg-gray-100 min-h-screen">
+<div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">{{product.name}}</h1>
+    <p class="mb-2">설명: {{product.description}}</p>
+    <p class="mb-6">기본 재고: {{product.stock}}</p>
+
+    <h2 class="text-xl font-semibold mb-2">옵션 관리</h2>
+    <table class="bg-gray-200">
+        <thead class="bg-gray-200">
+            <tr>
+                <th class="px-4 py-2">사이즈</th>
+                <th class="px-4 py-2">컬러</th>
+                <th class="px-4 py-2">수량</th>
+                <th class="px-4 py-2">액션</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#variants}}
+                <tr class="border-t">
+                    <td class="px-4 py-2">{{size}}</td>
+                    <td class="px-4 py-2">{{color}}</td>
+                    <td class="px-4 py-2">{{stockQuantity}}</td>
+                    <td class="px-4 py-2">
+                        <form action="/products/{{product.id}}/variants/{{id}}/delete" method="post">
+                            <button type="submit" class="text-red-500 hover:underline">
+                                삭제
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {{/variants}}
+            {{^variants}}
+                <tr>
+                    <td colspan="4" class="text-center py-2">옵션이 없습니다.</td>
+                </tr>
+            {{/variants}}
+        </tbody>
+    </table>
+    <h3 class="text-lg font-medium mb-2">새 옵션 추가</h3>
+    <form action="/products/{{product.id}}/variants" method="post" class="flex space-x-2">
+        <input name="size" type="text" placeholder="사이즈" required
+               class="w-1/5 px-2 py-1 border rounded" />
+        <input name="color" type="text" placeholder="컬러" required
+               class="w-1/4 px-2 py-1 border rounded" />
+        <input name="stockQuantity" type="number" placeholder="수량" required
+               class="w-1/5 px-2 py-1 border rounded" />
+        <button type="submit"
+                class="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+            추가
+        </button>
+    </form>
+
+    <p class="mt-6">
+        <a href="/products"
+           class="text-blue-600 hover:underline">
+            ← 상품 목록으로
+        </a>
+    </p>
+</div>
+</body>
+</html>
