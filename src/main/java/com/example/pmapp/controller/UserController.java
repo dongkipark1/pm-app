@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -36,5 +38,12 @@ public class UserController {
         user.setRole("USER");
         userRepository.save(user);
         return "redirect:/users/login";
+    }
+
+    @GetMapping
+    public String list(Model model){
+        List<User> users = userRepository.findAll();
+        model.addAttribute("users", users);
+        return "admin/list";
     }
 }
