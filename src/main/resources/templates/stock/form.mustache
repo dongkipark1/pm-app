@@ -3,25 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>재고 등록</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>재고 등록</h1>
-
-    <form action="/stocks/create" method="post">
-        <label>수량:
-            <input type="number" name="quantity" required>
-        </label><br>
-
-        <label>입출고 구분:
-            <select name="type" required>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
+<div class="bg-white p-6 rounded-lg shadow w-full max-w-sm">
+    <h1 class="text-2xl font-bold mb-6 text-center">재고 등록</h1>
+    <form action="/stocks/create"
+          method="post"
+          class="space-y-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700">수량</label>
+            <input type="number"
+                   name="quantity"
+                   required
+                   class="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">입출고 구분</label>
+            <select name="type"
+                    required
+                    class="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="IN">입고</option>
                 <option value="OUT">출고</option>
             </select>
-        </label><br>
-
-        <button type="submit">저장</button>
+        </div>
+        <button type="submit"
+                class="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+            저장
+        </button>
     </form>
-
-<a href="/stocks">재고 목록으로</a>
+    <p class="mt-4 text-center">
+        <a href="/stocks" class="text-blue-600 hover:underline">← 재고 목록으로</a>
+    </p>
+</div>
 </body>
 </html>
