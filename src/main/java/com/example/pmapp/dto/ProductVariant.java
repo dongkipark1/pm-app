@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "product_varients", uniqueConstraints = @UniqueConstraint(columnNames = {"product_id", "size", "color"}))
+@Table(name = "product_variants", uniqueConstraints = @UniqueConstraint(columnNames = {"product_id", "size", "color"}))
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductVarient {
+public class ProductVariant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
