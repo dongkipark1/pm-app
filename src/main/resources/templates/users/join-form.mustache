@@ -1,33 +1,40 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>회원가입</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-50 min-h-screen flex items-center justify-center p-6">
 <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden">
     <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 flex flex-col items-center">
-        <img src="/static/images/logo.png" alt="Logo" class="h-12 mb-3">
+        <img src="/static/images/logo.png" alt="Logo" class="h-12 mb-3" />
         <h1 class="text-3xl font-extrabold text-white">회원가입</h1>
         <p class="text-blue-200 mt-1">의류 재고관리 서비스에 오신 것을 환영합니다</p>
     </div>
+
     <form action="/users/join" method="post" class="space-y-5 p-6">
+
+        <!-- 이메일 -->
         <div>
             <label for="email" class="text-sm font-semibold text-gray-700">이메일</label>
             <input
                     id="email"
                     name="email"
                     type="email"
-                    value="{{form.email}}"
+                    value="{{email}}"
                     required
-                    placeholder="your.email@example.com"
+                    placeholder="your_email@example.com"
                     class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-400"
             />
-            {{#errors.email}}
-                <p class="text-red-500 text-sm mt-1">{{.}}</p>
-            {{/errors.email}}
+            {{#errors}}
+                {{#email}}
+                    <p class="text-red-500 text-sm mt-1">{{.}}</p>
+                {{/email}}
+            {{/errors}}
         </div>
+
+        <!-- 비밀번호 -->
         <div>
             <label for="password" class="text-sm font-semibold text-gray-700">비밀번호</label>
             <input
@@ -38,10 +45,14 @@
                     placeholder="••••••••"
                     class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-400"
             />
-            {{#errors.password}}
-                <p class="text-red-500 text-sm mt-1">{{.}}</p>
-            {{/errors.password}}
+            {{#errors}}
+                {{#password}}
+                    <p class="text-red-500 text-sm mt-1">{{.}}</p>
+                {{/password}}
+            {{/errors}}
         </div>
+
+        <!-- 비밀번호 확인 -->
         <div>
             <label for="confirmPassword" class="text-sm font-semibold text-gray-700">비밀번호 확인</label>
             <input
@@ -52,29 +63,41 @@
                     placeholder="••••••••"
                     class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-400"
             />
-            {{#errors.confirmPassword}}
-                <p class="text-red-500 text-sm mt-1">{{.}}</p>
-            {{/errors.confirmPassword}}
+            {{#errors}}
+                {{#confirmPassword}}
+                    <p class="text-red-500 text-sm mt-1">{{.}}</p>
+                {{/confirmPassword}}
+            {{/errors}}
         </div>
+
+        <!-- 전화번호 -->
         <div>
             <label for="phoneNumber" class="text-sm font-semibold text-gray-700">전화번호</label>
             <input
                     id="phoneNumber"
                     name="phoneNumber"
                     type="text"
-                    value="{{form.phoneNumber}}"
+                    value="{{phoneNumber}}"
                     placeholder="010-1234-5678"
                     class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-400"
             />
-            {{#errors.phoneNumber}}
-                <p class="text-red-500 text-sm mt-1">{{.}}</p>
-            {{/errors.phoneNumber}}
+            {{#errors}}
+                {{#phoneNumber}}
+                    <p class="text-red-500 text-sm mt-1">{{.}}</p>
+                {{/phoneNumber}}
+            {{/errors}}
         </div>
-        <button type="submit"
-                class="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition">
+
+        <!-- 제출 버튼 -->
+        <button
+                type="submit"
+                class="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition"
+        >
             가입하기
         </button>
+
     </form>
+
     <div class="border-t border-gray-100 p-4 text-center bg-gray-50">
         <p class="text-sm text-gray-600">
             이미 계정이 있나요?

@@ -9,12 +9,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,31 +36,46 @@ public class UserController {
 
     @GetMapping("/join")
     public String joinForm(Model model){
-        model.addAttribute("form", new Registration());
+        model.addAttribute("email", "");
+        model.addAttribute("phoneNumber", "");
+        model.addAttribute("errors", Collections.emptyMap());
         return "users/join-form";
     }
 
     @PostMapping("/join")
     public String join(
-            @Valid @ModelAttribute("form") Registration form,
-            BindingResult binding
+            @Valid @ModelAttribute("formList") Registration registration,
+            BindingResult binding,
+            Model model
     ) {
         // 비밀번호 일치 확인
-        if (!form.getPassword().equals(form.getConfirmPassword())) {
-            binding.rejectValue("confirmPassword","mismatch","비밀번호가 일치하지 않습니다");
+        if (!registration.getPassword().equals(registration.getConfirmPassword())) {
+            binding.rejectValue("confirmPassword", "mismatch", "비밀번호가 일치하지 않습니다");
         }
         // 이메일 중복 확인
-        if (userRepository.existsByEmail(form.getEmail())) {
-            binding.rejectValue("email","duplicate","이미 사용 중인 이메일입니다");
+        if (userRepository.existsByEmail(registration.getEmail())) {
+            binding.rejectValue("email", "duplicate", "이미 사용 중인 이메일입니다");
         }
+
         if (binding.hasErrors()) {
+            Map<String, String> errors = binding.getFieldErrors().stream()
+                    .collect(Collectors.toMap(
+                            FieldError::getField,
+                            FieldError::getDefaultMessage,
+                            (existing, replacement) -> existing
+                    ));
+
+            model.addAttribute("email", registration.getEmail());
+            model.addAttribute("phoneNumber", registration.getPhoneNumber());
+            model.addAttribute("errors", errors);
             return "users/join-form";
         }
 
+        // 정상 처리 시 사용자 저장
         User user = new User();
-        user.setEmail(form.getEmail());
-        user.setPassword(passwordEncoder.encode(form.getPassword()));
-        user.setPhoneNumber(form.getPhoneNumber());
+        user.setEmail(registration.getEmail());
+        user.setPassword(passwordEncoder.encode(registration.getPassword()));
+        user.setPhoneNumber(registration.getPhoneNumber());
         userRepository.save(user);
 
         return "redirect:/users/login?registered";
