@@ -39,7 +39,7 @@
         </tr>
         </thead>
         <tbody>
-        {{#product}}
+        {{#products}}
             <tr class="border-t">
                 <td class="px-4 py-2">{{id}}</td>
                 <td class="px-4 py-2">{{name}}</td>
@@ -48,7 +48,7 @@
                 <td class="px-4 py-2 space-x-2">
                     <a href="/products/{{id}}"
                        class="text-indigo-600 hover:underline">상세</a>
-                    <a href="/products/{{id}}/update"
+                    <a href="/products/{{id}}/update-form"
                        class="text-blue-600 hover:underline">수정</a>
                     <form action="/products/{{id}}/delete" method="post" class="inline">
                         <button type="submit"
@@ -59,12 +59,12 @@
                     </form>
                 </td>
             </tr>
-        {{/product}}
-        {{^product}}
+        {{/products}}
+        {{^products}}
             <tr>
                 <td colspan="5" class="text-center py-4">등록된 상품이 없습니다.</td>
             </tr>
-        {{/product}}
+        {{/products}}
         </tbody>
     </table>
 </div>
