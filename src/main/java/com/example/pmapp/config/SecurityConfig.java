@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/users/login")
                         .loginProcessingUrl("/users/login")
-                        .defaultSuccessUrl("/products", true)
+                        .defaultSuccessUrl("/dashboard", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
