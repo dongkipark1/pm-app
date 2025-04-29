@@ -89,6 +89,6 @@ public class UserController {
     public String list(Model model){
         List<User> users = userRepository.findAll();
         model.addAttribute("users", users);
-        return "admin/list";
+        return "users/list";
     }
 }
