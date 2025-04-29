@@ -105,5 +105,44 @@
         </p>
     </div>
 </div>
+
+<script>
+    const emailInput = document.getElementById('email');
+    const emailError = document.getElementById('email-error');
+    const pwInput = document.getElementById('password');
+    const confirmInput = document.getElementById('confirmPassword');
+    const confirmError = document.getElementById('confirm-error');
+    const submitBtn = document.getElementById('submitBtn');
+
+    emailInput.addEventListener('blur', async () => {
+        if (!emailInput.value) return;
+        const resp = await fetch(`/users/check-email?email=${encodeURIComponent(emailInput.value)}`);
+        const data = await resp.json();
+        if (data.exists){
+            emailError.textContent = '이미 사용 중인 이메일입니다';
+        } else {
+            emailError.textContent = '';
+        }
+        updateSubmitState();
+    });
+
+    function validatePassword(){
+        if (pwInput.value && confirmInput.value && pwInput.value !== confirmInput.value) {
+            confirmError.textContent = '비밀번호가 일치하지 않습니다';
+        } else {
+            confirmError.textContent = '';
+        }
+        updateSubmitState();
+    }
+    pwInput.addEventListener('input', validatePassword);
+    confirmInput.addEventListener('input', validatePassword);
+
+
+    function updateSubmitState(){
+        const hasError = [emailError, confirmError].some(el => el.textContent);
+        submitBtn.disable = hasError;
+        submitBtn.style.opacity = hasError ? '0.6' : '1';
+    }
+</script>
 </body>
 </html>

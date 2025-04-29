@@ -10,10 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -79,6 +76,13 @@ public class UserController {
         userRepository.save(user);
 
         return "redirect:/users/login?registered";
+    }
+
+    // 이메일 중복확인 API
+    @GetMapping("/check-email")
+    public @ResponseBody Map<String, Boolean> checkEmail(@RequestParam("email") String email){
+        boolean exists = userRepository.existsByEmail(email);
+        return Collections.singletonMap("exists", exists);
     }
 
     @GetMapping
