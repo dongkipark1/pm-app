@@ -1,65 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>상품 등록/수정</title>
+    <meta charset="UTF-8" />
+    <title>
+        {{#id}}상품 수정{{/id}}{{^id}}상품 등록{{/id}}
+    </title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-8">
+<body class="bg-gray-100 min-h-screen">
 
 <nav class="bg-white shadow mb-6">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
         <h1 class="text-xl font-bold">재고 관리</h1>
         <div class="space-x-4">
             <a href="/dashboard" class="text-gray-700 hover:underline">대시보드</a>
-            <a href="/products"  class="text-indigo-600 hover:underline">상품</a>
-            <a href="/users"     class="text-gray-700 hover:underline">직원</a>
-            <a href="/stocks"    class="text-gray-700 hover:underline">재고</a>
-            <a href="/logout"    class="text-red-600 hover:underline">로그아웃</a>
+            <a href="/products" class="text-indigo-600 hover:underline">상품</a>
+            <a href="/users" class="text-gray-700 hover:underline">직원</a>
+            <a href="/stocks" class="text-gray-700 hover:underline">재고</a>
+            <a href="/logout" class="text-red-600 hover:underline">로그아웃</a>
         </div>
     </div>
 </nav>
 
-<div class="bg-white p-6 rounded-lg shadow w-full max-w-md">
-    <h1 class="text-2xl font-bold mb-6 text-center">
-        {{#product.id}}상품 수정{{/product.id}}
-        {{^product.id}}상품 등록{{/product.id}}
-    </h1>
-    <form action="{{#product.id}}/products/{{product.id}}/update{{/product.id}}{{^product.id}}/products/create{{/product.id}}"
-          method="post"
-          class="space-y-4">
-        <div>
-            <label class="block text-sm font-medium text-gray-700">상품명</label>
-            <input type="text"
-                   name="name"
-                   value="{{product.name}}"
-                   required
-                   class="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        </div>
-        <div>
-            <label class="block text-sm font-medium text-gray-700">가격</label>
-            <input type="number"
-                   name="price"
-                   value="{{product.price}}"
-                   required
-                   class="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        </div>
-        <div>
-            <label class="block text-sm font-medium text-gray-700">재고</label>
-            <input type="number"
-                   name="stock"
-                   value="{{product.stock}}"
-                   required
-                   class="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        </div>
-        <button type="submit"
-                class="w-full py-2 px-4 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
-            {{#product.id}}수정{{/product.id}}{{^product.id}}등록{{/product.id}}
-        </button>
-    </form>
-    <p class="mt-4 text-center">
-        <a href="/products" class="text-blue-600 hover:underline">← 상품 목록으로</a>
-    </p>
+<div class="container mx-auto px-4">
+    <div class="bg-white rounded-lg shadow p-6 max-w-lg mx-auto">
+        <h2 class="text-2xl font-bold mb-4">
+            {{#id}}상품 수정{{/id}}{{^id}}상품 등록{{/id}}
+        </h2>
+
+        <form
+                action="{{#id}}/products/{{id}}/update{{/id}}{{^id}}/products/create{{/id}}"
+                method="post"
+                enctype="multipart/form-data"
+                class="space-y-4"
+        >
+            <!-- 상품명 -->
+            <div>
+                <label for="name" class="block text-sm font-semibold">상품명</label>
+                <input
+                        id="name" name="name" value="{{name}}"
+                        required class="mt-1 w-full px-4 py-2 border rounded-lg"
+                />
+            </div>
+
+            <!-- 가격 -->
+            <div>
+                <label for="price" class="block text-sm font-semibold">가격</label>
+                <input
+                        id="price" name="price" type="number" min="0" value="{{price}}"
+                        required class="mt-1 w-full px-4 py-2 border rounded-lg"
+                />
+            </div>
+
+            <!-- 설명 -->
+            <div>
+                <label for="description" class="block text-sm font-semibold">설명</label>
+                <textarea
+                        id="description" name="description"
+                        class="mt-1 w-full px-4 py-2 border rounded-lg"
+                >{{description}}</textarea>
+            </div>
+
+            <!-- 재고 -->
+            <div>
+                <label for="stock" class="block text-sm font-semibold">재고 수량</label>
+                <input
+                        id="stock" name="stock" type="number" min="0" value="{{stock}}"
+                        required class="mt-1 w-full px-4 py-2 border rounded-lg"
+                />
+            </div>
+
+            <!-- 이미지 업로드 -->
+            <div>
+                <label for="imageFile" class="block text-sm font-semibold text-gray-700">상품 이미지</label>
+                <input
+                        id="imageFile"
+                        name="imageFile"
+                        type="file"
+                        accept="image/*"
+                        class="mt-1 block w-full text-sm text-gray-600"
+                />
+            </div>
+
+            <!-- 버튼 -->
+            <button
+                    type="submit"
+                    class="w-full py-3 bg-indigo-600 text-white rounded-lg"
+            >
+                {{#id}}수정 완료{{/id}}{{^id}}등록하기{{/id}}
+            </button>
+        </form>
+    </div>
 </div>
 </body>
 </html>

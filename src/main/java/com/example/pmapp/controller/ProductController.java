@@ -32,7 +32,11 @@ public class ProductController {
     // 상품 등록
     @GetMapping("/create-form")
     public String createForm(Model model){
-        model.addAttribute("product", new Product());
+        model.addAttribute("id", null);
+        model.addAttribute("name", "");
+        model.addAttribute("price", 0);
+        model.addAttribute("description", "");
+        model.addAttribute("stock", 0);
         return "product/form";
     }
 
@@ -44,19 +48,30 @@ public class ProductController {
     }
 
     // 상품 수정
-    @GetMapping("/{id}/update")
+    @GetMapping("/{id}/update-form")
     public String updateForm(@PathVariable Long id, Model model){
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 상품입니다:" + id));
-        model.addAttribute("product", product);
+        Product p = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid product id: " + id));
+        model.addAttribute("id",          p.getId());
+        model.addAttribute("name",        p.getName());
+        model.addAttribute("price",       p.getPrice());
+        model.addAttribute("description", p.getDescription());
+        model.addAttribute("stock",       p.getStock());
         return "product/form";
     }
 
     // 상품 수정 처리
     @PostMapping("/{id}/update")
     public String update(@PathVariable Long id, @ModelAttribute Product product){
-        product.setId(id);
-        productRepository.save(product);
+        Product existing = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 상품: " + id));
+
+        existing.setName(product.getName());
+        existing.setPrice(product.getPrice());
+        existing.setDescription(product.getDescription());
+        existing.setStock(product.getStock());
+
+        productRepository.save(existing);
         return "redirect:/products";
     }
 
