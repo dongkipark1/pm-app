@@ -107,8 +107,9 @@ public class ProductController {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid product id: " + id));
         List<ProductVariant> variants = productVariantRepository.findByProductId(id);
-        model.addAttribute("product",    product);
-        model.addAttribute("variants",   variants);
+        model.addAttribute("product", product);
+        model.addAttribute("productId", product.getId());
+        model.addAttribute("variants", variants);
         model.addAttribute("variantForm", new ProductVariant());
         return "product/detail";
     }
