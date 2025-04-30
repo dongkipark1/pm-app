@@ -10,9 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,9 +26,9 @@ public class ProductController {
 
     /** 1) 전체 상품 목록 **/
     @GetMapping
-    public String list(Model model){
+    public String list(Model model) {
         List<Product> products = productRepository.findAll();
-        model.addAttribute("products", products);  // key는 복수형으로!
+        model.addAttribute("products", products);
         return "product/list";
     }
 
@@ -103,14 +105,19 @@ public class ProductController {
 
     /** 7) 상세 + 옵션 목록 **/
     @GetMapping("/{id}")
-    public String detail(@PathVariable Long id, @RequestParam(value = "remindOptions", required = false) Boolean remindOptions, Model model){
+    public String detail(
+            @PathVariable Long id,
+            @RequestParam(value = "remindOptions", required = false) Boolean remindOptions,
+            Model model
+    ) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid product id: " + id));
         List<ProductVariant> variants = productVariantRepository.findByProductId(id);
+
         model.addAttribute("product", product);
-        model.addAttribute("variantCount", variants.size());
         model.addAttribute("variants", variants);
         model.addAttribute("sizes", List.of("XS","S","M","L","XL"));
+        model.addAttribute("variantCount", variants.size());         // ← 여기 추가
         model.addAttribute("variantForm", new ProductVariant());
         model.addAttribute("showOptionModal", Boolean.TRUE.equals(remindOptions));
         return "product/detail";
@@ -120,12 +127,33 @@ public class ProductController {
     @PostMapping("/{id}/variants")
     public String addVariant(
             @PathVariable Long id,
-            @ModelAttribute("variantForm") ProductVariant variantForm
+            @ModelAttribute("variantForm") ProductVariant variantForm,
+            RedirectAttributes redirectAttrs
     ) {
         Product product = productRepository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 상품: " + id));
+
+        // 기존 옵션들의 총 수량
+        List<ProductVariant> existing = productVariantRepository.findByProductId(id);
+        int sum = existing.stream()
+                .mapToInt(ProductVariant::getStockQuantity)
+                .sum();
+
+        // 새로 추가하려는 옵션 수량
+        int incoming = variantForm.getStockQuantity();
+
+        if (sum + incoming > product.getStock()) {
+            // 재고 초과 시, 상세페이지로 redirect하면서 에러 플래시
+            redirectAttrs.addFlashAttribute("errorMessage",
+                    "옵션 수량 합계(" + (sum + incoming) + ")가 제품 재고(" + product.getStock() + ")를 초과합니다.");
+            return "redirect:/products/" + id + "?remindOptions=true";
+        }
+
+        // 재고가 충분하면 저장
+        variantForm.setId(null);
         variantForm.setProduct(product);
         productVariantRepository.save(variantForm);
+
         return "redirect:/products/" + id;
     }
 

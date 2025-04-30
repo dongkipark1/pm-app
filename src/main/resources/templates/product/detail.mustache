@@ -21,32 +21,32 @@
     </div>
 </nav>
 
-<div class="container mx-auto px-4">
+<div class="container mx-auto px-4 max-w-3xl space-y-6">
 
-    <!-- 상품 정보 카드 -->
-    <div class="bg-white rounded-lg shadow mb-6 overflow-hidden">
-        <img src="{{product.imageUrl}}" alt="{{product.name}}" class="w-full h-64 object-cover">
-        <div class="p-6">
-            <h2 class="text-2xl font-bold mb-2">{{product.name}}</h2>
-            <p class="text-gray-700 mb-4">{{product.description}}</p>
-            <p class="font-semibold">재고: {{product.stock}}</p>
+    {{#errorMessage}}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            {{errorMessage}}
         </div>
+    {{/errorMessage}}
+
+    <!-- 상품 기본 정보 -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-2xl font-bold mb-4">{{product.name}}</h2>
+        {{#product.imageUrl}}
+            <img src="{{product.imageUrl}}" alt="상품 이미지"
+                 class="w-full h-64 object-cover rounded mb-4" />
+        {{/product.imageUrl}}
+        <p class="mb-2"><strong>설명:</strong> {{product.description}}</p>
+        <p class="mb-6"><strong>재고:</strong> {{product.stock}}</p>
     </div>
 
-    <!-- 옵션 관리 카드 -->
-    <div class="bg-white rounded-lg shadow mb-6 p-6">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xl font-bold">옵션 (총 {{variantCount}}개)</h3>
-            <button
-                    id="show-add-form"
-                    class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
-                신규 옵션 추가
-            </button>
-        </div>
+    <!-- 옵션 관리 섹션 -->
+    <div id="option-section" class="bg-white rounded-lg shadow p-6 space-y-6">
+        <h3 class="text-xl font-bold">옵션 (총 {{variants.size}}개)</h3>
 
         <!-- 옵션 테이블 -->
         <div class="overflow-x-auto">
-            <table class="min-w-full border border-gray-200">
+            <table class="min-w-full divide-y divide-gray-200 mb-4">
                 <thead class="bg-gray-50">
                 <tr>
                     <th class="px-4 py-2 text-left">ID</th>
@@ -56,17 +56,16 @@
                     <th class="px-4 py-2 text-center">관리</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody class="bg-white divide-y divide-gray-200">
                 {{#variants}}
-                    <tr class="border-t">
+                    <tr>
                         <td class="px-4 py-2">{{id}}</td>
                         <td class="px-4 py-2">{{size}}</td>
                         <td class="px-4 py-2">{{color}}</td>
                         <td class="px-4 py-2 text-right">{{stockQuantity}}</td>
                         <td class="px-4 py-2 text-center">
-                            <form action="/products/{{product.id}}/variants/{{id}}/delete" method="post" class="inline">
-                                <button
-                                        type="submit"
+                            <form action="/products/{{product.id}}/variants/{{id}}/delete" method="post">
+                                <button type="submit"
                                         class="text-red-600 hover:underline"
                                         onclick="return confirm('정말 삭제하시겠습니까?')">
                                     삭제
@@ -86,53 +85,61 @@
             </table>
         </div>
 
-        <!-- 신규 옵션 폼 (숨김 상태에서 버튼으로 토글) -->
-        <div id="add-form" class="mt-6 bg-gray-50 rounded-lg p-4 hidden">
+        <!-- 신규 옵션 추가 폼 -->
+        <div class="space-y-4">
+            <h4 class="text-lg font-medium">새 옵션 추가</h4>
             <form action="/products/{{product.id}}/variants" method="post" class="space-y-4">
-                <!-- 사이즈 -->
+                <!-- 사이즈 라디오 -->
                 <div>
                     <span class="block text-sm font-semibold text-gray-700 mb-2">사이즈</span>
                     <div class="flex space-x-2">
-                        {{#sizes}}
-                            <label class="cursor-pointer">
-                                <input type="radio" name="size" value="{{.}}" class="hidden peer" required>
-                                <span class="px-3 py-1 border rounded-lg peer-checked:bg-indigo-600 peer-checked:text-white">
-                                    {{.}}
-                                </span>
-                            </label>
-                        {{/sizes}}
+                        <label class="cursor-pointer">
+                            <input type="radio" name="size" value="XS" required class="peer hidden" />
+                            <span class="px-3 py-1 border rounded-lg peer-checked:bg-indigo-600 peer-checked:text-white">XS</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="size" value="S" class="peer hidden" />
+                            <span class="px-3 py-1 border rounded-lg peer-checked:bg-indigo-600 peer-checked:text-white">S</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="size" value="M" class="peer hidden" />
+                            <span class="px-3 py-1 border rounded-lg peer-checked:bg-indigo-600 peer-checked:text-white">M</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="size" value="L" class="peer hidden" />
+                            <span class="px-3 py-1 border rounded-lg peer-checked:bg-indigo-600 peer-checked:text-white">L</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="size" value="XL" class="peer hidden" />
+                            <span class="px-3 py-1 border rounded-lg peer-checked:bg-indigo-600 peer-checked:text-white">XL</span>
+                        </label>
                     </div>
                 </div>
                 <!-- 컬러 -->
                 <div>
                     <label for="color" class="block text-sm font-semibold text-gray-700">컬러</label>
                     <input id="color" name="color" type="text" required
-                           class="mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+                           class="mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
                 </div>
                 <!-- 수량 -->
                 <div>
                     <label for="stockQuantity" class="block text-sm font-semibold text-gray-700">수량</label>
                     <input id="stockQuantity" name="stockQuantity" type="number" min="0" required
-                           class="mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+                           class="mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
                 </div>
-                <div class="text-right">
-                    <button type="button" id="cancel-add"
-                            class="mr-2 px-4 py-2 border rounded-lg hover:bg-gray-200">
-                        취소
-                    </button>
-                    <button type="submit"
-                            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-                        추가하기
-                    </button>
-                </div>
+                <button type="submit"
+                        class="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700">
+                    추가하기
+                </button>
             </form>
         </div>
     </div>
 
-    <!-- 등록 / 삭제 버튼 -->
     <div class="flex justify-center space-x-4 mb-8">
-        <a href="/products/{{product.id}}/update-form"
-           class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">등록</a>
+        <a href="/products"
+           class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            등록 완료
+        </a>
         <form action="/products/{{product.id}}/delete" method="post">
             <button type="submit"
                     class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
@@ -141,16 +148,8 @@
             </button>
         </form>
     </div>
-</div>
 
-<script>
-    // 신규 옵션 폼 토글
-    const showBtn = document.getElementById('show-add-form');
-    const addForm = document.getElementById('add-form');
-    const cancelBtn = document.getElementById('cancel-add');
-    showBtn.addEventListener('click', () => addForm.classList.toggle('hidden'));
-    cancelBtn.addEventListener('click', () => addForm.classList.add('hidden'));
-</script>
+</div>
 
 </body>
 </html>
