@@ -52,8 +52,8 @@ public class ProductController {
             String filename = fileStorageService.store(imageFile);
             product.setImageUrl("/uploads/" + filename);
         }
-        productRepository.save(product);
-        return "redirect:/products";
+        Product saved = productRepository.save(product);
+        return "redirect:/products/" + saved.getId() + "?remindOptions=true";
     }
 
     /** 4) 수정 폼 **/
@@ -103,14 +103,16 @@ public class ProductController {
 
     /** 7) 상세 + 옵션 목록 **/
     @GetMapping("/{id}")
-    public String detail(@PathVariable Long id, Model model){
+    public String detail(@PathVariable Long id, @RequestParam(value = "remindOptions", required = false) Boolean remindOptions, Model model){
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid product id: " + id));
         List<ProductVariant> variants = productVariantRepository.findByProductId(id);
         model.addAttribute("product", product);
-        model.addAttribute("productId", product.getId());
+        model.addAttribute("variantCount", variants.size());
         model.addAttribute("variants", variants);
+        model.addAttribute("sizes", List.of("XS","S","M","L","XL"));
         model.addAttribute("variantForm", new ProductVariant());
+        model.addAttribute("showOptionModal", Boolean.TRUE.equals(remindOptions));
         return "product/detail";
     }
 

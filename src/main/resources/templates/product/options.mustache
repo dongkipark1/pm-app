@@ -1,0 +1,157 @@
+<!-- src/main/resources/templates/product/detail.mustache -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>상품 상세</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+<!-- 네비게이션 바 -->
+<nav class="bg-white shadow mb-6">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <h1 class="text-xl font-bold">상품 관리</h1>
+        <div class="space-x-4">
+            <a href="/dashboard" class="text-gray-700 hover:underline">대시보드</a>
+            <a href="/products"  class="text-indigo-600 hover:underline">상품</a>
+            <a href="/users"     class="text-gray-700 hover:underline">직원</a>
+            <a href="/stocks"    class="text-gray-700 hover:underline">재고</a>
+            <a href="/logout"    class="text-red-600 hover:underline">로그아웃</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mx-auto px-4 max-w-3xl space-y-6">
+
+    <!-- 옵션 리마인더 모달 -->
+    {{^variants}}
+        <div id="option-reminder-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm text-center">
+                <h2 class="text-xl font-bold mb-2">세부 옵션을 등록해주세요</h2>
+                <p class="mb-4">상품에 다양한 사이즈·색상을 추가하려면 아래 옵션 관리 섹션에서 추가하세요.</p>
+                <button id="close-modal" class="px-4 py-2 bg-indigo-600 text-white rounded">확인</button>
+            </div>
+        </div>
+        <script>
+            const overlay = document.getElementById('option-reminder-modal');
+            // 오버레이 클릭 시 닫기
+            overlay.addEventListener('click', e => {
+                if (e.target === overlay) overlay.remove();
+            });
+            // 확인 버튼 클릭 시 닫기
+            document.getElementById('close-modal').addEventListener('click', () => {
+                overlay.remove();
+            });
+        </script>
+    {{/variants}}
+
+    <!-- 상품 기본 정보 -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-2xl font-bold mb-4">{{product.name}}</h2>
+        {{#product.imageUrl}}
+            <img src="{{product.imageUrl}}" alt="상품 이미지" class="w-full h-64 object-cover rounded mb-4" />
+        {{/product.imageUrl}}
+        <p class="mb-2"><strong>설명:</strong> {{product.description}}</p>
+        <p class="mb-6"><strong>재고:</strong> {{product.stock}}</p>
+
+    </div>
+
+    <!-- 옵션 관리 섹션 (테이블 + 폼) -->
+    <div id="option-section" class="bg-white rounded-lg shadow p-6 space-y-6">
+        <h3 class="text-xl font-bold">옵션 (총 {{variants.size}}개)</h3>
+
+        <!-- 옵션 테이블 -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 mb-4">
+                <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-4 py-2 text-left">ID</th>
+                    <th class="px-4 py-2 text-left">사이즈</th>
+                    <th class="px-4 py-2 text-left">컬러</th>
+                    <th class="px-4 py-2 text-right">수량</th>
+                    <th class="px-4 py-2 text-center">관리</th>
+                </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                {{#variants}}
+                    <tr>
+                        <td class="px-4 py-2">{{id}}</td>
+                        <td class="px-4 py-2">{{size}}</td>
+                        <td class="px-4 py-2">{{color}}</td>
+                        <td class="px-4 py-2 text-right">{{stockQuantity}}</td>
+                        <td class="px-4 py-2 text-center">
+                            <form action="/products/{{product.id}}/options/{{id}}/delete" method="post">
+                                <button type="submit" class="text-red-600 hover:underline" onclick="return confirm('이 옵션을 삭제하시겠습니까?');">삭제</button>
+                            </form>
+                        </td>
+                    </tr>
+                {{/variants}}
+                {{^variants}}
+                    <tr>
+                        <td colspan="5" class="px-4 py-4 text-center text-gray-500">등록된 옵션이 없습니다.</td>
+                    </tr>
+                {{/variants}}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 신규 옵션 추가 폼 -->
+        <div class="space-y-4">
+            <h4 class="text-lg font-medium">새 옵션 추가</h4>
+            <form action="/products/{{product.id}}/options" method="post" class="space-y-4">
+                <!-- 사이즈 라디오 -->
+                <div>
+                    <span class="block text-sm font-semibold text-gray-700 mb-2">사이즈</span>
+                    <div class="flex space-x-2">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="size" value="XS" required class="peer hidden" />
+                            <span class="px-3 py-1 border rounded-lg peer-checked:bg-indigo-600 peer-checked:text-white">XS</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="size" value="S" class="peer hidden" />
+                            <span class="px-3 py-1 border rounded-lg peer-checked:bg-indigo-600 peer-checked:text-white">S</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="size" value="M" class="peer hidden" />
+                            <span class="px-3 py-1 border rounded-lg peer-checked:bg-indigo-600 peer-checked:text-white">M</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="size" value="L" class="peer hidden" />
+                            <span class="px-3 py-1 border rounded-lg peer-checked:bg-indigo-600 peer-checked:text-white">L</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="size" value="XL" class="peer hidden" />
+                            <span class="px-3 py-1 border rounded-lg peer-checked:bg-indigo-600 peer-checked:text-white">XL</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 컬러 입력 -->
+                <div>
+                    <label for="color" class="block text-sm font-semibold text-gray-700">컬러</label>
+                    <input id="color" name="color" type="text" required class="mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                </div>
+
+                <!-- 수량 입력 -->
+                <div>
+                    <label for="stockQuantity" class="block text-sm font-semibold text-gray-700">수량</label>
+                    <input id="stockQuantity" name="stockQuantity" type="number" min="0" required class="mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700">추가하기</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 수정/삭제 버튼 가운데 정렬 -->
+    <div class="bg-white rounded-lg shadow p-6 flex justify-center space-x-3">
+        <a href="/products/{{product.id}}/update-form" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">등록</a>
+        <form action="/products/{{product.id}}/delete" method="post">
+            <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
+        </form>
+    </div>
+
+</div>
+</body>
+</html>
