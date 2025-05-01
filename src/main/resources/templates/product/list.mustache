@@ -2,78 +2,94 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>상품 목록</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen p-8">
+<body class="bg-gray-100 min-h-screen">
 
 <nav class="bg-white shadow mb-6">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
         <h1 class="text-xl font-bold">재고 관리</h1>
         <div class="space-x-4">
             <a href="/dashboard" class="text-gray-700 hover:underline">대시보드</a>
-            <a href="/products" class="text-indigo-600 hover:underline">상품</a>
-            <a href="/users"    class="text-gray-700 hover:underline">직원</a>
-            <a href="/stocks"   class="text-gray-700 hover:underline">재고</a>
-            <a href="/logout"   class="text-red-600 hover:underline">로그아웃</a>
+            <a href="/products"  class="text-indigo-600 hover:underline">상품</a>
+            <a href="/users"     class="text-gray-700 hover:underline">직원</a>
+            <a href="/stocks"    class="text-gray-700 hover:underline">재고</a>
+            <a href="/logout"    class="text-red-600 hover:underline">로그아웃</a>
         </div>
     </div>
 </nav>
 
-<div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
-    <div class="flex justify-between items-center mb-4">
+<div class="container mx-auto p-6">
+    <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold">상품 목록</h1>
         <a href="/products/create-form"
-           class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-            + 상품 등록
-        </a>
+           class="bg-blue-600 text-white px-4 py-2 rounded">+ 상품 등록</a>
     </div>
-
-    <div class="overflow-x-auto">
+    <div class="bg-white rounded shadow overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
             <tr>
-                <th class="px-4 py-2 text-left">상품 사진</th>
-                <th class="px-4 py-2 text-left">ID</th>
-                <th class="px-4 py-2 text-left">상품명</th>
-                <th class="px-4 py-2 text-right">가격</th>
-                <th class="px-4 py-2 text-right">재고</th>
-                <th class="px-4 py-2 text-center">옵션 수</th>
-                <th class="px-4 py-2 text-center">관리</th>
+                <!-- 1) 상품 사진 -->
+                <th class="px-4 py-2">상품 사진</th>
+                <!-- 2) ID -->
+                <th class="px-4 py-2">ID</th>
+                <!-- 3) 이름 -->
+                <th class="px-4 py-2">이름</th>
+                <!-- 4) 가격 -->
+                <th class="px-4 py-2">가격</th>
+                <!-- 5) 재고 -->
+                <th class="px-4 py-2">재고</th>
+                <!-- 6) 사이즈 -->
+                <th class="px-4 py-2">사이즈</th>
+                <!-- 7) 컬러 -->
+                <th class="px-4 py-2">컬러</th>
+                <!-- 8) 관리 -->
+                <th class="px-4 py-2">관리</th>
             </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
             {{#products}}
-                <tr>
+                <tr class="hover:bg-gray-50">
+                    <!-- 1) 상품 사진 -->
                     <td class="px-4 py-2">
                         {{#imageUrl}}
-                            <img src="{{imageUrl}}" alt="{{name}}" class="h-12 w-12 object-cover rounded" />
+                            <img src="{{imageUrl}}"
+                                 alt="{{name}}"
+                                 class="h-16 w-16 object-cover rounded"/>
                         {{/imageUrl}}
                         {{^imageUrl}}
-                            <div class="h-12 w-12 bg-gray-200 rounded"></div>
+                            <div class="h-16 w-16 bg-gray-200 rounded"></div>
                         {{/imageUrl}}
                     </td>
+                    <!-- 2) ID -->
                     <td class="px-4 py-2">{{id}}</td>
+                    <!-- 3) 이름 -->
                     <td class="px-4 py-2">{{name}}</td>
-                    <td class="px-4 py-2 text-right">₩{{price}}</td>
-                    <td class="px-4 py-2 text-right">{{stock}}</td>
-                    <td class="px-4 py-2 text-center">{{variantCount}}</td>
-                    <td class="px-4 py-2 text-center space-x-2">
-                        <a href="/products/{{id}}" class="text-indigo-600 hover:underline">상세</a>
-                        <a href="/products/{{id}}/update-form" class="text-blue-600 hover:underline">수정</a>
+                    <!-- 4) 가격 -->
+                    <td class="px-4 py-2">₩{{price}}</td>
+                    <!-- 5) 재고 -->
+                    <td class="px-4 py-2">{{stock}}</td>
+                    <!-- 6) 사이즈 -->
+                    <td class="px-4 py-2">{{size}}</td>
+                    <!-- 7) 컬러 -->
+                    <td class="px-4 py-2">{{color}}</td>
+                    <!-- 8) 관리 -->
+                    <td class="px-4 py-2 space-x-2">
+                        <a href="/products/{{id}}/update-form"
+                           class="text-indigo-600 hover:underline">수정</a>
                         <form action="/products/{{id}}/delete" method="post" class="inline">
-                            <button type="submit" class="text-red-600 hover:underline"
-                                    onclick="return confirm('정말 삭제하시겠습니까?')">
-                                삭제
-                            </button>
+                            <button onclick="return confirm('삭제하시겠습니까?')"
+                                    class="text-red-600 hover:underline">삭제</button>
                         </form>
                     </td>
                 </tr>
             {{/products}}
+
             {{^products}}
                 <tr>
-                    <td colspan="7" class="text-center py-4 text-gray-500">
+                    <td colspan="8" class="px-4 py-4 text-center text-gray-500">
                         등록된 상품이 없습니다.
                     </td>
                 </tr>
@@ -82,6 +98,5 @@
         </table>
     </div>
 </div>
-
 </body>
 </html>
